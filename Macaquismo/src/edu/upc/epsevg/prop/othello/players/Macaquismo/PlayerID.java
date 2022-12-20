@@ -14,6 +14,8 @@ import static edu.upc.epsevg.prop.othello.players.Macaquismo.PlayerMiniMax.colum
 import static edu.upc.epsevg.prop.othello.players.Macaquismo.PlayerMiniMax.filas;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
 
 /**
  *
@@ -31,6 +33,10 @@ public class PlayerID implements IPlayer, IAuto {
     final static int[] filas    = {0, 1, 2, 3, 4, 5, 6, 7};
     final static int[] columnas = {0, 1, 2, 3, 4, 5, 6, 7};
     private Move movimiento;            //Variable global con el mov que elegimos
+    long[][][] tabla = null;
+    HashMap<Long, Integer> guardar; // para ir guardando las heuristicas
+    private int heurAhorradas = 0;
+    private int contadorErrores = 0;
     
     int[][] tableroPuntuacion = {{4, -3,  2,  2,  2,  2, -3,  4},
                             {-3, -4, -1, -1, -1, -1, -4, -3},
@@ -46,6 +52,8 @@ public class PlayerID implements IPlayer, IAuto {
     public PlayerID(String nombre) { //solo el nombre en Game
         this._nombre = nombre;
         this._profundidad = 1;
+        guardarTablero();
+        guardar = new HashMap<>();
     }
     
     
@@ -57,9 +65,10 @@ public class PlayerID implements IPlayer, IAuto {
         macaquismoPlayer = gs.getCurrentPlayer();
         otroPlayer = CellType.opposite(macaquismoPlayer);
         
-        //while (!tiempo){
+        
         movimiento = miniMax(gs); //no se le mete la profundidad
-        //}
+        
+       
         
         return movimiento;
     }
@@ -72,6 +81,33 @@ public class PlayerID implements IPlayer, IAuto {
     @Override
     public String getName() {
         return "Macaquismo(" + _nombre + ")";
+    }
+    
+    private long valorHash(GameStatus T){
+        MacaquismoStatus nuevoTablero = new MacaquismoStatus(T);
+        long valHash = 0;
+        for (int fila : filas){
+            for (int columna : columnas){
+                if (nuevoTablero.getPos(fila, columna) != CellType.EMPTY){
+                    valHash = valHash ^ (tabla[nuevoTablero.devuelveColor(fila,columna)][fila][columna]);
+                } 
+            }
+        }
+        return valHash;
+    }
+    
+    private void guardarTablero() {
+        //blancos es 0 y negros es 1
+        tabla = new long [2][8][8];
+        //random
+        Random num = new Random();
+        for (int color = 0; color < 2; color++){
+            for (int fila : filas){
+                for (int columna : columnas){
+                    tabla[color][fila][columna] = num.nextLong();
+                }
+            }
+        }
     }
     
     private Move miniMax(GameStatus T){

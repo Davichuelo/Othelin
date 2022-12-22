@@ -6,7 +6,7 @@ package edu.upc.epsevg.prop.othello.players.Macaquismo;
 import edu.upc.epsevg.prop.othello.GameStatus;
 
 /**
- *
+ * Clase que representa un tablero de Othello
  * @author David Martínez y Daniel Mariño
  * 
  */
@@ -15,13 +15,13 @@ public class MacaquismoStatus extends GameStatus {
         super(gs);
     }
     
-    public int devuelveColor(int fila, int columna){ //blancos es 0 y negros es 1
+    public int devuelveColor(int fila, int columna){ 
         if (board_color.get(fila+columna*8))
             return 1;
         else return 0;
     }
     
-    public boolean devuelveOcupacion(int fila, int columna){ //blancos es 0 y negros es 1
+    public boolean devuelveOcupacion(int fila, int columna){ 
         return (board_occupied.get(fila+columna*8));            
     }
 }

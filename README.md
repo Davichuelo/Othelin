@@ -1,2 +1,2 @@
-# Othelin
-Proyectin final PrOP
+# Othelo
+Proyectin final Prop

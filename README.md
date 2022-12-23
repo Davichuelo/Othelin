@@ -1,2 +1,2 @@
-# Othelo
+# Othello
 Proyectin final Prop
